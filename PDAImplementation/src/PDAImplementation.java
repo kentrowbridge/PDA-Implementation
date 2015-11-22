@@ -98,80 +98,67 @@ public class PDAImplementation {
 	private static boolean evaluateString(String str, String currentState, Stack stack) {
 		
 		//Base Case: the string has been completely processed.
-		if(str.equals(""))
+		if(str.equals("") && acceptStates.contains(currentState))
 		{
-			return acceptStates.contains(currentState);
+			return true;
 		}
 		
 		//Read the first character of the string and process it
-		String input = str.substring(0, 1);
-		String newStr = str.substring(1);
+		String input = "";
+		String newStr = "";
+		if(!str.isEmpty())
+		{
+			input = str.substring(0, 1);
+			newStr = str.substring(1);
+		}
+		
 		
 		for(Rule rule : rules)
 		{
-			//Create a computation for each rule involving the input
-			if(rule.input.equals(input))
+			//Check the rule is valid for the current configuration
+			if(!rule.currentState.equals(currentState))
 			{
-				Stack newStack = (Stack) stack.clone();
-				if(!stack.empty())
-				{
-					if(!rule.popValue.equals("") && !rule.popValue.equals(newStack.peek()))
-					{
-						continue;
-					}
-				}
-				if(stack.empty() && !rule.popValue.equals(""))
+				continue;
+			}
+			if(!(rule.input.equals("") || rule.input.equals(input)))
+			{
+				continue;
+			}
+			if(stack.empty())
+			{
+				if(!rule.popValue.equals(""))
 				{
 					continue;
-				}
-				if(!stack.empty())
-				{
-					if(!rule.popValue.equals(""))
-					{
-						newStack.pop();
-					}
-				}
-				if(!rule.pushValue.equals(""))
-				{
-					newStack.push(rule.pushValue);
-				}
-				String newState = rule.nextState;
-				if(evaluateString(newStr, newState, newStack))
-				{
-					return true;
 				}
 			}
-			else if(rule.input.equals(""))
+			else if(!rule.popValue.equals("") && !rule.popValue.equals(stack.peek()))
 			{
-				if(!rule.currentState.equals(currentState))
-				{
-					continue;
-				}
-				Stack newStack = (Stack) stack.clone();
-				if(!stack.empty())
-				{
-					if(!rule.popValue.equals(newStack.peek()))
-					{
-						continue;
-					}
-				}
-				if(stack.empty() && !rule.popValue.equals(""))
-				{
-					continue;
-				}
-				if(!stack.empty())
-				{
-					newStack.pop();
-				}
-				if(!rule.pushValue.equals(""))
-				{
-					newStack.push(rule.pushValue);
-				}
-				String newState = rule.nextState;
-				if(evaluateString(str, newState, newStack))
-				{
-					return true;
-				}
+				continue;
+			}
+			
+			//Create computations for each valid rule
+			Stack newStack = (Stack) stack.clone();
+			if(!rule.popValue.equals(""))
+			{
+				newStack.pop();
+			}
+			if(!rule.pushValue.equals(""))
+			{
+				newStack.push(rule.pushValue);
+			}
+			String newState = rule.nextState;
+			boolean accepts = false;
+			if(rule.input.equals(""))
+			{
+				accepts = evaluateString(str, newState, newStack);
+			}
+			else
+			{
+				accepts = evaluateString(newStr, newState, newStack);
+			}
+			if(accepts)
+			{
+				return true;
 			}
 		}
 		
