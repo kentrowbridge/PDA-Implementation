@@ -12,25 +12,27 @@ public class PDAImplementation {
 	private static int numRules;
 	private static Rule[] rules;
 	private static String startState;
-	private static List<String> acceptStates = new ArrayList<String>();;
+	private static List<String> acceptStates = new ArrayList<String>();
+	
+	private static String split = ",";
 	
 	public static void main(String args[])
 	{
 		////////////// Read PDA description from file //////////////
 		try {
-			FileReader fr = new FileReader("input.txt");
+			FileReader fr = new FileReader("input2.txt");
 			BufferedReader br = new BufferedReader(fr);
 			
 			//save list of states
-			states = br.readLine().split(" ");
+			states = br.readLine().split(split);
 			
 			//save the alphabet
-			String[] temp = br.readLine().split(" ");
+			String[] temp = br.readLine().split(split);
 			for(int i = 0; i < temp.length; i++)
 				alphabet.add(temp[i]);
 			
 			//save the stack alphabet
-			temp = br.readLine().split(" ");
+			temp = br.readLine().split(split);
 			for(int i = 0; i < temp.length; i++)
 				stackAlphabet.add(temp[i]);
 			
@@ -42,7 +44,7 @@ public class PDAImplementation {
 			//save the rules
 			for(int i = 0; i < numRules; i++)
 			{
-				String[] rule = br.readLine().split(" ", -1);						
+				String[] rule = br.readLine().split(split, -1);						
 				/*
 				 * Index values
 				 * [0] - current state
@@ -59,7 +61,7 @@ public class PDAImplementation {
 			startState = br.readLine();
 			
 			//save accept states
-			temp = br.readLine().split(" ");
+			temp = br.readLine().split(split);
 			for(int i = 0; i < temp.length; i++)
 				acceptStates.add(temp[i]);
 			
