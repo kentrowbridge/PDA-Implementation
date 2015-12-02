@@ -20,7 +20,7 @@ public class PDAImplementation {
 	{
 		////////////// Read PDA description from file //////////////
 		try {
-			FileReader fr = new FileReader("input2.txt");
+			FileReader fr = new FileReader("input.txt");
 			BufferedReader br = new BufferedReader(fr);
 			
 			//save list of states
